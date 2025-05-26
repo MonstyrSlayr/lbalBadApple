@@ -33,5 +33,6 @@ Required packages:
 - numpy
 - textwrap
 - os
+- csv
 
 any version should be fine :)

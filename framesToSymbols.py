@@ -12,6 +12,7 @@ import os
 import numpy as np
 import textwrap
 import math
+from csvWriting import write_csv_row, count_strings
 
 symbolNumDict = np.load('symbolData.npy',allow_pickle='TRUE').item() # RUN SYMBOLS TO PIXELS FIRST
 symbolImgs = {}
@@ -19,6 +20,7 @@ symbolSize = 12 # symbols are 12 by 12 pixels, hard coded
 whiteBG = True # false for transparent background
 frameLowerLimit = 0 # for debugging, set to 0 to unlimit
 frameUpperLimit = 100 # for debugging, set to 0 to unlimit
+writeDataToFile = True # set to false to omit data
 
 symbolsDirectory = os.fsencode("symbols")
 framesDirectory = os.fsencode("frames")
@@ -120,6 +122,10 @@ for file in os.listdir(framesDirectory):
         symbolsToUse.append(symbolToUse)
     
     previousFrameSymbols = symbolsToUse
+    if writeDataToFile:
+        symbolsToUseCopy = [symbol.replace("symbols/", "").replace(".png", "") for symbol in symbolsToUse]
+        daData = count_strings(symbolsToUseCopy)
+        write_csv_row("symbolExportData.csv", filenameReal.replace(".jpg", ""), daData)
 
     # reformat symbolsToUse for concatenation
     symbolsGrid = [[symbolImgs[symbolsToUse[(dimensionSymbolX * y) + x]] for x in range(dimensionSymbolX)] for y in range(dimensionSymbolY)]
