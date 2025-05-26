@@ -19,7 +19,7 @@ symbolImgs = {}
 symbolSize = 12 # symbols are 12 by 12 pixels, hard coded
 whiteBG = True # false for transparent background
 frameLowerLimit = 0 # for debugging, set to 0 to unlimit
-frameUpperLimit = 100 # for debugging, set to 0 to unlimit
+frameUpperLimit = 0 # for debugging, set to 0 to unlimit
 writeDataToFile = True # set to false to omit data
 invertOutput = False # self explanitory
 
