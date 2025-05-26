@@ -1,21 +1,28 @@
+# it's hard to believe but this file actually converts frames to symbols
+# takes every symbol (already converted into a string)
+# takes every frame, slices it up into symbol sized squares, and converts it into a string
+# compare it with symbols and takes the best fit
+# make a new frame made of just symbols
+# profit
+
 import cv2 as cv
 import os
 import numpy as np
 import textwrap
 import math
 
-symbolDict = np.load('symbolData.npy',allow_pickle='TRUE').item()
+symbolDict = np.load('symbolData.npy',allow_pickle='TRUE').item() # RUN SYMBOLS TO PIXELS FIRST
 symbolImgs = {}
-symbolSize = 12
-whiteBG = True
+symbolSize = 12 # symbols are 12 by 12 pixels, hard coded
+whiteBG = True # false for transparent background
 
-symbolsDirectory = os.fsencode("img")
+symbolsDirectory = os.fsencode("symbols")
 framesDirectory = os.fsencode("frames")
 
-#load symbols
+# load all symbols into memory (is this a good idea? probably not)
 for file in os.listdir(symbolsDirectory):
     filenameReal = os.fsdecode(file)
-    filename = "img/" + filenameReal
+    filename = "symbols/" + filenameReal
     daImage = cv.imread(filename, cv.IMREAD_UNCHANGED)
     if whiteBG:
         for i in range(len(daImage)):
@@ -27,6 +34,7 @@ for file in os.listdir(symbolsDirectory):
                     daImage[i][j][3] = 255
     symbolImgs[filename] = daImage
 
+# parse every frame
 for file in os.listdir(framesDirectory):
     filenameReal = os.fsdecode(file)
     filename = "frames/" + filenameReal
@@ -44,17 +52,16 @@ for file in os.listdir(framesDirectory):
             col = frame[j][i]
             whiteThresh = 127
             
-            # if (col[3] == 0):
-            #     frameString += "1" #transparent
             if (col[0] > whiteThresh) and (col[1] > whiteThresh) and (col[2] > whiteThresh):
-                frameString += "1" #treat whiteish as transparent
+                frameString += "0" # treat whiteish as transparent
             else:
-                frameString += "0" #opaque
+                frameString += "1" # opaque
     
-    #split the frame into groups of symbolSize squares
+    # split the frame into groups of symbolSize squares
     daRowsArray = textwrap.wrap(frameString, symbolSize)
     symbolSquares = []
     
+    # make symbolsquare strings for each
     for i in range(dimensionSymbolY):
         for j in range(dimensionSymbolX):
             square = ""
@@ -64,9 +71,11 @@ for file in os.listdir(framesDirectory):
                 
             symbolSquares.append(square)
         
-    perfectScore = symbolSize * symbolSize
+    perfectScore = symbolSize * symbolSize # if
     symbolsToUse = []
     
+    # give every square a symbol
+    # compares symbolsquare to a symbol and takes the best match
     for daSquare in (symbolSquares):
         scoreDict = {}
         symbolToUse = ""
@@ -88,14 +97,14 @@ for file in os.listdir(framesDirectory):
                 symbolToUse = s
         symbolsToUse.append(symbolToUse)
         
-    #reformat symbolsToUse for concatenation
+    # reformat symbolsToUse for concatenation
     symbolsGrid = [[symbolImgs[symbolsToUse[(dimensionSymbolX * y) + x]] for x in range(dimensionSymbolX)] for y in range(dimensionSymbolY)]
-    #print(symbolsGrid)
     
     rows = []
     for col in range(len(symbolsGrid)):
         rows.append(cv.hconcat(symbolsGrid[col]))
     
+    # export to symbolframes
     finalFrame = cv.vconcat(rows)
     newFileName = "symbolFrames/" + filenameReal.replace("jpg", "png")
     cv.imwrite(newFileName, finalFrame)

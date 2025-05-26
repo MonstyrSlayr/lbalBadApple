@@ -18,7 +18,7 @@ Folders:
 </h2>
 
 - <b>/frames</b> - this is where the original silhouettes go
-- <b>/img</b> - this is where the symbol images go
+- <b>/symbols</b> - this is where the symbol images go
 - <b>/symbolFrames</b> - this is the output file, containing the silhouettes made from symbols
 
 <h2>
@@ -26,7 +26,7 @@ Files and their purposes:
 </h2>
 
 - <b>videoToFrames.py</b> - takes a video and outputs frames into /frames
-- <b>symbolsToPixels.py</b> - takes the symbols in /img, converts them into strings of 1s and 0s to symbolData.npy depending on their opacity makeup
+- <b>symbolsToPixels.py</b> - takes the symbols in /symbols, converts them into strings of 1s and 0s to symbolData.npy depending on their opacity makeup
 - <b>framesToSymbols.py</b> - converts the files in /frames to symbol frames in /symbolFrames
 - <b>symbolFramesToVideo.py</b> - takes the symbol frames in /symbolFrames and outputs a video
 
