@@ -1,9 +1,6 @@
 import csv
 import os
 
-import csv
-import os
-
 def write_csv_row(file_path, row_name, data):
     fieldnames = ["frame"]
     existing_rows = []

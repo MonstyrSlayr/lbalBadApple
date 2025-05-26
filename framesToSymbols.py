@@ -14,13 +14,14 @@ import textwrap
 import math
 from csvWriting import write_csv_row, count_strings
 
-symbolNumDict = np.load('symbolData.npy',allow_pickle='TRUE').item() # RUN SYMBOLS TO PIXELS FIRST
+symbolNumDict = np.load("symbolData.npy",allow_pickle="TRUE").item() # RUN SYMBOLS TO PIXELS FIRST
 symbolImgs = {}
 symbolSize = 12 # symbols are 12 by 12 pixels, hard coded
 whiteBG = True # false for transparent background
 frameLowerLimit = 0 # for debugging, set to 0 to unlimit
 frameUpperLimit = 100 # for debugging, set to 0 to unlimit
 writeDataToFile = True # set to false to omit data
+invertOutput = False # self explanitory
 
 symbolsDirectory = os.fsencode("symbols")
 framesDirectory = os.fsencode("frames")
@@ -67,7 +68,7 @@ for file in os.listdir(framesDirectory):
             col = frame[j][i]
             whiteThresh = 127
             
-            if (col[0] > whiteThresh) and (col[1] > whiteThresh) and (col[2] > whiteThresh):
+            if ((col[0] > whiteThresh) and (col[1] > whiteThresh) and (col[2] > whiteThresh)) == (not invertOutput):
                 frameString += "0" # treat whiteish as transparent
             else:
                 frameString += "1" # opaque
