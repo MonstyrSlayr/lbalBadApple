@@ -5,22 +5,26 @@
 # make a new frame made of just symbols
 # profit
 
+import random
+import time
 import cv2 as cv
 import os
 import numpy as np
 import textwrap
 import math
 
-symbolDict = np.load('symbolData.npy',allow_pickle='TRUE').item() # RUN SYMBOLS TO PIXELS FIRST
+symbolNumDict = np.load('symbolData.npy',allow_pickle='TRUE').item() # RUN SYMBOLS TO PIXELS FIRST
 symbolImgs = {}
 symbolSize = 12 # symbols are 12 by 12 pixels, hard coded
 whiteBG = True # false for transparent background
-frameLimit = 100 # for debugging, set to 0 to unlimit
+frameLowerLimit = 0 # for debugging, set to 0 to unlimit
+frameUpperLimit = 100 # for debugging, set to 0 to unlimit
 
 symbolsDirectory = os.fsencode("symbols")
 framesDirectory = os.fsencode("frames")
 
 # load all symbols into memory (is this a good idea? probably not)
+previousFrameSymbols = []
 for file in os.listdir(symbolsDirectory):
     filenameReal = os.fsdecode(file)
     filename = "symbols/" + filenameReal
@@ -37,7 +41,14 @@ for file in os.listdir(symbolsDirectory):
 
 # parse every frame
 frameCount = 0
+startTimeReal = time.time()
 for file in os.listdir(framesDirectory):
+    if (frameLowerLimit != 0) and (frameCount < frameLowerLimit):
+        frameCount += 1
+        continue
+
+    startTime = time.time()
+    
     filenameReal = os.fsdecode(file)
     filename = "frames/" + filenameReal
     
@@ -63,42 +74,53 @@ for file in os.listdir(framesDirectory):
     daRowsArray = textwrap.wrap(frameString, symbolSize)
     symbolSquares = []
     
-    # make symbolsquare strings for each
+    # make symbolsquare strings into nums for each
     for i in range(dimensionSymbolY):
         for j in range(dimensionSymbolX):
-            square = ""
+            squareNum = 0
+            k = 0
+
             for x in range(symbolSize):
                 indexI = (i * symbolSize * dimensionSymbolX) + (j + (x * dimensionSymbolX))
-                square += daRowsArray[indexI]
+                for char in daRowsArray[indexI]:
+                    if (char == "1"):
+                        squareNum += pow(2, k)
+                    k += 1
                 
-            symbolSquares.append(square)
+            symbolSquares.append(squareNum)
         
-    perfectScore = symbolSize * symbolSize # if
+    perfectScore = symbolSize * symbolSize
     symbolsToUse = []
     
     # give every square a symbol
-    # compares symbolsquare to a symbol and takes the best match
-    for daSquare in (symbolSquares):
+    # compares symbolsquare to a symbolData key and takes the best match
+    # then takes a random symbol from the key
+    for i in range(len(symbolSquares)):
+        daSquareNum = symbolSquares[i]
         scoreDict = {}
-        symbolToUse = ""
+        symbolNumToUse = 0
         highScore = 0
         
-        for s in symbolDict:
-            scoreDict[s] = 0
+        for bigNum in symbolNumDict:
+            scoreDict[bigNum] = 0
             
-            for c in range(len(symbolDict[s])):
-                if (symbolDict[s][c] == daSquare[c]):
-                    scoreDict[s] += 1
+            for n in range(perfectScore):
+                if ((bigNum & (1 << n)) == (daSquareNum & (1 << n))): # dark magic
+                    scoreDict[bigNum] += 1
             
-            if (scoreDict[s] == perfectScore):
-                symbolToUse = s
-                highScore = perfectScore
-                break
-            elif (scoreDict[s] > highScore):
-                highScore = scoreDict[s]
-                symbolToUse = s
+            if (scoreDict[bigNum] > highScore):
+                highScore = scoreDict[bigNum]
+                symbolNumToUse = bigNum
+
+        symbolToUse = None
+        if ((len(previousFrameSymbols) > i) and (previousFrameSymbols[i] in symbolNumDict[symbolNumToUse])):
+            symbolToUse = previousFrameSymbols[i]
+        else:
+            symbolToUse = random.choice(symbolNumDict[symbolNumToUse])
         symbolsToUse.append(symbolToUse)
-        
+    
+    previousFrameSymbols = symbolsToUse
+
     # reformat symbolsToUse for concatenation
     symbolsGrid = [[symbolImgs[symbolsToUse[(dimensionSymbolX * y) + x]] for x in range(dimensionSymbolX)] for y in range(dimensionSymbolY)]
     
@@ -110,8 +132,14 @@ for file in os.listdir(framesDirectory):
     finalFrame = cv.vconcat(rows)
     newFileName = "symbolFrames/" + filenameReal.replace("jpg", "png")
     cv.imwrite(newFileName, finalFrame)
-    print("written " + newFileName)
+    endTime = time.time()
+    elapsedTime = endTime - startTime
+    print(f"written {newFileName} in {elapsedTime:.4f} seconds")
 
     frameCount += 1
-    if (frameLimit != 0) and (frameCount >= frameLimit):
+    if (frameUpperLimit != 0) and (frameCount >= frameUpperLimit):
         break
+
+endTimeReal = time.time()
+elapsedTimeReal = endTimeReal - startTimeReal
+print(f"finished writing in {elapsedTimeReal:.4f} seconds")

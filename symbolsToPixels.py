@@ -1,10 +1,10 @@
-# takes the symbols in /symbols and converts them into 1s and 0s, and shoves them into symbolData.npy
+# takes the symbols in /symbols and converts them into numbers, and shoves them into symbolData.npy
 
 import cv2 as cv
 import os
 import numpy as np
 
-symbolDict = {}
+symbolNumDict = {}
 
 imgDirectory = os.fsencode("symbols")
 
@@ -12,17 +12,20 @@ for file in os.listdir(imgDirectory):
     filename = "symbols/" + os.fsdecode(file)
     
     symbol = cv.imread(filename, cv.IMREAD_UNCHANGED)
-    symbolString = ""
+    symbolNum = 0 # using powers of 2 to store 1s and zeros, python can store big ass numbers :)
     
+    k = 0
     for j in range(len(symbol)):
         for i in range(len(symbol[j])):
             col = symbol[j][i]
             
-            if (col[3] == 0):
-                symbolString += "0" # transparent
-            else:
-                symbolString += "1" # opaque
+            if (col[3] != 0):
+                symbolNum += pow(2, k)
+            k += 1
 
-    symbolDict[filename] = symbolString
+    if not symbolNum in symbolNumDict.keys():
+        symbolNumDict[symbolNum] = []
+    symbolNumDict[symbolNum].append(filename)
 
-np.save("symbolData.npy", symbolDict)
+print(symbolNumDict)
+np.save("symbolData.npy", symbolNumDict)
