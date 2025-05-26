@@ -9,13 +9,6 @@ a tool that takes frames and LBaL-ifies them. feel free to make your own images 
 delete the empty.txt files before use please
 
 <h2>
-TODO
-</h2>
-
-- more random symbols, so it doesn't just take the first in alphabetical, but in a way that won't cause epilepsy
-- remake lbal bad apple video with above and with the correct empty sprite
-
-<h2>
 Folders:
 </h2>
 
