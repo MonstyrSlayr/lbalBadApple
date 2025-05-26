@@ -9,7 +9,7 @@ def write_csv_row(file_path, row_name, data):
     if file_exists:
         with open(file_path, mode="r", newline="") as csvfile:
             reader = csv.DictReader(csvfile)
-            fieldnames = reader.fieldnames or ["row"]
+            fieldnames = reader.fieldnames or ["frame"]
             existing_rows = list(reader)
 
     # determine if we need to add new columns
@@ -24,7 +24,7 @@ def write_csv_row(file_path, row_name, data):
 
         # create new row
         new_row = {key: "0" for key in fieldnames}
-        new_row["row"] = row_name
+        new_row["frame"] = row_name
         for key, value in data.items():
             new_row[key] = value if value is not None else "0"
         existing_rows.append(new_row)
@@ -40,7 +40,7 @@ def write_csv_row(file_path, row_name, data):
         with open(file_path, mode="a", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             new_row = {key: "0" for key in fieldnames}
-            new_row["row"] = row_name
+            new_row["frame"] = row_name
             for key, value in data.items():
                 new_row[key] = value if value is not None else "0"
             writer.writerow(new_row)
