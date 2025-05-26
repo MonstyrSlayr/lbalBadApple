@@ -15,6 +15,7 @@ symbolDict = np.load('symbolData.npy',allow_pickle='TRUE').item() # RUN SYMBOLS 
 symbolImgs = {}
 symbolSize = 12 # symbols are 12 by 12 pixels, hard coded
 whiteBG = True # false for transparent background
+frameLimit = 100 # for debugging, set to 0 to unlimit
 
 symbolsDirectory = os.fsencode("symbols")
 framesDirectory = os.fsencode("frames")
@@ -35,6 +36,7 @@ for file in os.listdir(symbolsDirectory):
     symbolImgs[filename] = daImage
 
 # parse every frame
+frameCount = 0
 for file in os.listdir(framesDirectory):
     filenameReal = os.fsdecode(file)
     filename = "frames/" + filenameReal
@@ -109,3 +111,7 @@ for file in os.listdir(framesDirectory):
     newFileName = "symbolFrames/" + filenameReal.replace("jpg", "png")
     cv.imwrite(newFileName, finalFrame)
     print("written " + newFileName)
+
+    frameCount += 1
+    if (frameLimit != 0) and (frameCount >= frameLimit):
+        break

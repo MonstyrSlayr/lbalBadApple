@@ -1,5 +1,11 @@
+# converts symbolframes to a video (no sound)
+
 import cv2 as cv
 import os
+
+w = 480
+h = 360
+fps = 30.0
 
 symbolFramesDirectory = os.fsencode("symbolFrames")
 symbolFramesCount = sum(1 for _, _, files in os.walk("symbolFrames") for f in files)
@@ -15,10 +21,7 @@ for file in os.listdir(symbolFramesDirectory):
 
 print(len(frames))
 
-w = 480
-h = 360
-
-writer = cv.VideoWriter("videoOutput.mp4", -1, 30.0, (w, h))
+writer = cv.VideoWriter("videoOutput.mp4", -1, fps, (w, h))
 
 for frame in frames:
     writer.write(frame)

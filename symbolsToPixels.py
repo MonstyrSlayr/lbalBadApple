@@ -25,4 +25,4 @@ for file in os.listdir(imgDirectory):
 
     symbolDict[filename] = symbolString
 
-np.save('symbolData.npy', symbolDict)
+np.save("symbolData.npy", symbolDict)

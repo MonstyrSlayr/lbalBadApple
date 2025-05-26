@@ -6,6 +6,8 @@ Luck Be a Landlord: Silhouette to Symbols Converter
 
 a tool that takes frames and LBaL-ifies them. feel free to make your own images and videos with this tool, and even use modded symbols
 
+delete the empty.txt files before use please
+
 <h2>
 TODO
 </h2>
