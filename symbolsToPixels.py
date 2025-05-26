@@ -27,4 +27,5 @@ for file in os.listdir(imgDirectory):
         symbolNumDict[symbolNum] = []
     symbolNumDict[symbolNum].append(filename)
 
+print(symbolNumDict)
 np.save("symbolData.npy", symbolNumDict)
