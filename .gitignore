@@ -1,6 +1,6 @@
 videoOutput.mp4
-# frames
-# symbolFrames
+frames/
+symbolFrames/
 symbolData.npy
 __pycache__
 symbolExportData.csv
