@@ -150,3 +150,5 @@ for file in os.listdir(framesDirectory):
 endTimeReal = time.time()
 elapsedTimeReal = endTimeReal - startTimeReal
 print(f"finished writing in {elapsedTimeReal:.4f} seconds")
+
+# finished writing in 62207.1934 seconds
