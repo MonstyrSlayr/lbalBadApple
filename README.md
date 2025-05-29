@@ -2,7 +2,7 @@
 Luck be a Landlord: Silhouette to Symbols Converter
 </h1>
 
-[![Bad Apple but it's Luck Be a Landlord](https://i9.ytimg.com/vi_webp/f5CtDEwnOLw/maxresdefault.webp?v=68358012&sqp=CIyN18EG&rs=AOn4CLCyAu-5WmyURFn5feJFw9RfmrNrJQ)](https://youtu.be/f5CtDEwnOLw)
+[![Bad Apple but it's Luck Be a Landlord](https://monstyrslayr.github.io/img/lbalBadApple.png)](https://youtu.be/f5CtDEwnOLw)
 [Bad Apple but it's Luck Be a Landlord](https://youtu.be/f5CtDEwnOLw)
 
 a tool that takes frames and LbaL-ifies them. feel free to make your own images and videos with this tool, and even use modded symbols
